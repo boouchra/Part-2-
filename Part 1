@@ -1,0 +1,84 @@
+
+
+
+#######################################################################
+
+data("iris")
+
+
+# afficher 6 premières données
+A <- head(iris)
+
+
+# classification CAH
+
+# Sélectionner les variables à utiliser
+X <- A[, 1:4]
+#data("iris")
+
+# standarisé les données = soutrir  la moyenne de chaque variable
+#et divise par l'écart type de chaque variable,
+#ce qui transforme les données en un ensemble de variables 
+#avec une moyenne de 0 et un écart type de 1.
+
+X_scaled <- scale(X)
+
+scale(X)
+
+# Application de CHA
+
+clustering <- hclust(dist(X_scaled), method = "ward.D2")
+groups <- cutree(clustering, k = 3)
+
+
+plot(clustering, main = "Dendrogramme de la CAH sur les données iris",
+     xlab = "", sub = "", ylab = "ward.D2")
+
+# cérification du résult
+print("Groups: ")
+print(groups)
+
+#Cela renvoie les étiquettes de cluster pour chaque échantillon d'iris.
+
+# supposons q'on ajoute une donnée
+
+# Exemple de nouvelle observation
+new_observation <- c(5.2, 3.3, 1.2, 0.1)
+
+
+new_observation <- X[1, ]
+
+
+X_new <- rbind(X, new_observation)
+
+print(new_observation)
+
+scale(new_observation)
+
+#A <- rbind(A, new_observation)
+
+
+#X <- A[, 1:4]
+
+# on standarise cette nouvelle obs en utilisant scale()
+
+new_observation_scaled <- scale(new_observation , center = attr(X_scaled, "scaled:center"), 
+                                scale = attr(X_scaled, "scaled:scale"))
+
+print(new_observation_scaled)
+# on peut prédir le cluster auquel cette obs appartienne en utilisant la fonction cutree
+
+new_observation_cluster <- cutree(clustering, h = 2.5)[length(groups) + 1]
+
+print("New observation cluster: ")
+print(new_observation_cluster)
+
+
+
+dend_new <- hclust(dist(rbind(X_scaled, new_observation_scaled)), method = "ward.D2")
+plot(dend_new)
+
+#######################################################################
+# TEST TEST TEST TEST TEST TEST TEST
+##########################################################################
+
